@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Sample Website • Web Dev by Bea
+  </title>
+  <meta content="Modern, mobile-first web development by Bea. Secure e-commerce (Stripe), fast load times, and SEO-friendly design." name="description"/>
+  <meta content="web development, ecommerce, responsive, SEO, performance, stripe" name="keywords"/>
+  <meta content="Web Dev by Bea" property="og:title"/>
+  <meta content="Crafting beautiful, high-performance websites that convert." property="og:description"/>
+  <meta content="website" property="og:type"/>
+  <meta content="index, follow" name="robots"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  <style>
+   :root{
+      --bg: #0b1020;
+      --card: #121a34;
+      --text: #e7ecff;
+      --muted: #93a1d1;
+      --brand: #7c4dff;   /* violet */
+      --brand-2: #00e5ff; /* cyan */
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --shadow: 0 10px 30px rgba(10, 16, 40, .35);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; }
+    body{
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(124,77,255,.22), transparent),
+                  radial-gradient(900px 500px at 10% -10%, rgba(0,229,255,.18), transparent),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container{ width: min(1120px, 92%); margin: 0 auto; }
+    .nav{ position: sticky; top:0; backdrop-filter: blur(10px); background: linear-gradient(180deg, rgba(11,16,32,.75), rgba(11,16,32,.25)); border-bottom: 1px solid rgba(255,255,255,.06); z-index: 40; }
+    .nav-inner{ display:flex; align-items:center; justify-content:space-between; padding: 14px 0; }
+    .logo{ display:flex; align-items:center; gap:10px; font-weight: 800; letter-spacing:.3px; }
+    .logo-badge{ width:32px; height:32px; display:grid; place-items:center; border-radius:10px; background: linear-gradient(135deg, var(--brand), var(--brand-2)); box-shadow: var(--shadow); }
+    .nav-links{ display:flex; gap:20px; align-items:center; }
+    .btn{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 11px 18px; border-radius: 999px; font-weight: 600; letter-spacing:.2px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2)); color:#0b1020;
+      box-shadow: var(--shadow); border: none; cursor:pointer;
+      transition: transform .08s ease, filter .18s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .btn.ghost{ background: rgba(255,255,255,.08); color: var(--text); box-shadow:none; border:1px solid rgba(255,255,255,.12); }
+
+    /* Hero */
+    .hero{ padding: 72px 0 56px; display:grid; grid-template-columns: 1.05fr .95fr; gap: 28px; align-items:center; }
+    .hero h1{ font-size: clamp(32px, 5vw, 56px); line-height:1.05; margin: 10px 0 16px; letter-spacing: -0.6px; }
+    .hero p{ color: var(--muted); font-size: clamp(16px, 2.2vw, 18px); }
+    .hero-cta{ display:flex; gap:14px; flex-wrap: wrap; margin-top: 22px; }
+    .badge-row{ display:flex; gap: 14px; flex-wrap: wrap; margin-top: 18px; }
+    .badge{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color: var(--muted); font-weight:600; font-size:13px; }
+    .hero-art{ position:relative; height: 380px; border-radius: var(--radius); background: linear-gradient(145deg, rgba(124,77,255,.15), rgba(0,229,255,.12)); border:1px solid rgba(255,255,255,.12); box-shadow: var(--shadow); overflow:hidden; }
+    .orbit{ position:absolute; inset: 0; opacity:.75; background:
+      radial-gradient(140px 140px at 30% 30%, rgba(124,77,255,.65), transparent 60%),
+      radial-gradient(120px 120px at 70% 35%, rgba(0,229,255,.65), transparent 60%),
+      radial-gradient(180px 180px at 55% 75%, rgba(124,77,255,.45), transparent 60%);
+      filter: blur(20px);
+    }
+    .window{ position:absolute; inset: 16px; background: #0d1430; border-radius: 14px; border:1px solid rgba(255,255,255,.06); overflow:hidden; box-shadow: var(--shadow); }
+    .window .titlebar{ display:flex; gap:8px; padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.06); background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); }
+    .dot{ width:10px; height:10px; border-radius:999px; }
+    .dot.red{ background:#ff5f56; } .dot.yellow{ background:#ffbd2e; } .dot.green{ background:#27c93f; }
+    .code{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 12px; color: #d8e0ff; padding: 14px; height: calc(100% - 38px); overflow:auto; }
+    .code .line{ opacity:.9; }
+
+    /* Sections */
+    section{ padding: 64px 0; }
+    .section-title{ font-size: clamp(22px, 3vw, 32px); margin:0 0 18px; }
+    .muted{ color: var(--muted); }
+
+    /* Features */
+    .grid-3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card{ background: var(--card); border:1px solid rgba(255,255,255,.08); padding: 22px; border-radius: var(--radius); box-shadow: var(--shadow); }
+    .card h3{ margin:0 0 8px; font-size: 18px; }
+
+    /* Portfolio mock */
+    .grid-2{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .mock{ border-radius: var(--radius); border:1px solid rgba(255,255,255,.1); overflow:hidden; background: linear-gradient(120deg, rgba(124,77,255,.2), rgba(0,229,255,.2)); box-shadow: var(--shadow); }
+    .mock .bar{ padding:10px; background: rgba(0,0,0,.25); border-bottom:1px solid rgba(255,255,255,.08); display:flex; gap:6px; }
+    .mock .shot{ height: 220px; background: conic-gradient(from 180deg at 50% 50%, rgba(255,255,255,.06), rgba(255,255,255,.02)); display:grid; place-items:center; font-weight:700; letter-spacing:.3px; color:#c7d2fe; }
+
+    /* Testimonials */
+    .quotes{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .quote{ background: var(--card); border:1px solid rgba(255,255,255,.08); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); font-size: 15px; }
+    .quote .who{ margin-top: 12px; opacity:.8; font-weight:600; font-size: 14px; }
+
+    /* Pricing cue */
+    .pricing{ display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; }
+    .price-card{ background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); position:relative; overflow:hidden; }
+    .price{ font-size: 34px; font-weight: 800; letter-spacing: -.2px; }
+    .pill{ font-size: 12px; padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.14); color: var(--muted); display:inline-block; margin-bottom:10px; }
+    .ul{ margin: 10px 0 0 0; padding: 0 0 0 16px; color: var(--muted); }
+
+    /* Contact */
+    .contact{ display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .input{ width:100%; padding:12px 14px; border-radius: 12px; border:1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.04); color: var(--text); }
+    textarea.input{ min-height: 120px; resize: vertical; }
+
+    footer{ padding: 28px 0 48px; color: var(--muted); border-top:1px solid rgba(255,255,255,.06); margin-top: 40px; }
+
+    /* Responsive */
+    @media (max-width: 960px){
+      .hero{ grid-template-columns: 1fr; }
+      .grid-3, .quotes, .pricing{ grid-template-columns: 1fr; }
+      .grid-2, .contact{ grid-template-columns: 1fr; }
+      .hero-art{ height: 320px; }
+    }
+  </style>
+  <link href="css/styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav class="nav">
+   <div class="container nav-inner">
+    <a class="logo" href="#">
+     <span class="logo-badge">
+      ⚡
+     </span>
+     <span>
+      Web Dev by Bea
+     </span>
+    </a>
+    <div class="nav-links">
+     <a class="muted" href="#work">
+      Work
+     </a>
+     <a class="muted" href="#services">
+      Services
+     </a>
+     <a class="muted" href="#pricing">
+      Pricing
+     </a>
+     <a class="btn ghost" href="#contact">
+      Contact
+     </a>
+     <a class="btn" href="#order">
+      Order Now
+     </a>
+    </div>
+   </div>
+  </nav>
+  <header class="container hero">
+   <div>
+    <div class="pill">
+     Modern • Responsive • Fast
+    </div>
+    <h1>
+     Crafting beautiful, high‑performance websites that convert
+    </h1>
+    <p>
+     I design and develop clean, responsive sites for startups, creators, and small businesses. Optimized for speed, accessibility, and SEO.
+    </p>
+    <div class="hero-cta">
+     <a class="btn" href="#work">
+      See Portfolio
+     </a>
+     <a class="btn ghost" href="#pricing">
+      View Packages
+     </a>
+    </div>
+    <div class="badge-row">
+     <span class="badge">
+      ✅ Mobile‑first
+     </span>
+     <span class="badge">
+      🚀 90+ Lighthouse
+     </span>
+     <span class="badge">
+      🔒 SSL &amp; Security
+     </span>
+     <span class="badge">
+      🛠️ Ongoing Support
+     </span>
+    </div>
+   </div>
+   <div aria-hidden="true" class="hero-art">
+    <div class="orbit">
+    </div>
+    <div class="window">
+     <div class="titlebar">
+      <span class="dot red">
+      </span>
+      <span class="dot yellow">
+      </span>
+      <span class="dot green">
+      </span>
+     </div>
+     <pre class="code">
+<span class="line">/* Sample component */</span>
+<span class="line">.button {</span>
+<span class="line">  background: linear-gradient(135deg, #7c4dff, #00e5ff);</span>
+<span class="line">  border-radius: 999px;</span>
+<span class="line">  padding: 12px 18px;</span>
+<span class="line">  box-shadow: 0 10px 30px rgba(10,16,40,.35);</span>
+<span class="line">}</span>
+<span class="line">.card {</span>
+<span class="line">  background: #121a34;</span>
+<span class="line">  border: 1px solid rgba(255,255,255,.08);</span>
+<span class="line">  border-radius: 16px;</span>
+<span class="line">}</span>
+        </pre>
+    </div>
+   </div>
+  </header>
+  <section class="container" id="services">
+   <h2 class="section-title">
+    Services
+   </h2>
+   <p class="muted">
+    Everything you need for a polished, production‑ready website.
+   </p>
+   <div class="grid-3" style="margin-top:16px;">
+    <div class="card">
+     <h3>
+      Design &amp; Build
+     </h3>
+     <p>
+      Custom layouts, brand‑aligned UI, and clean HTML/CSS/JS. Pixel‑perfect and accessible.
+     </p>
+    </div>
+    <div class="card">
+     <h3>
+      E‑commerce
+     </h3>
+     <p>
+      Product pages, carts, and payments with secure integrations and inventory setup.
+     </p>
+    </div>
+    <div class="card">
+     <h3>
+      Performance &amp; SEO
+     </h3>
+     <p>
+      Core Web Vitals, on‑page SEO, schema, and lazy‑loading for a snappy user experience.
+     </p>
+    </div>
+   </div>
+  </section>
+  <section class="container" id="work">
+   <h2 class="section-title">
+    Selected Work
+   </h2>
+   <p class="muted">
+    A few mock previews—real projects available on request.
+   </p>
+   <div class="grid-2" style="margin-top:16px;">
+    <div class="mock">
+     <div class="bar">
+      <span class="dot red">
+      </span>
+      <span class="dot yellow">
+      </span>
+      <span class="dot green">
+      </span>
+     </div>
+     <div class="shot">
+      SaaS Landing Page
+     </div>
+    </div>
+    <div class="mock">
+     <div class="bar">
+      <span class="dot red">
+      </span>
+      <span class="dot yellow">
+      </span>
+      <span class="dot green">
+      </span>
+     </div>
+     <div class="shot">
+      Boutique Store
+     </div>
+    </div>
+    <div class="mock">
+     <div class="bar">
+      <span class="dot red">
+      </span>
+      <span class="dot yellow">
+      </span>
+      <span class="dot green">
+      </span>
+     </div>
+     <div class="shot">
+      Portfolio Site
+     </div>
+    </div>
+    <div class="mock">
+     <div class="bar">
+      <span class="dot red">
+      </span>
+      <span class="dot yellow">
+      </span>
+      <span class="dot green">
+      </span>
+     </div>
+     <div class="shot">
+      Restaurant Menu
+     </div>
+    </div>
+   </div>
+  </section>
+  <section class="container">
+   <h2 class="section-title">
+    Happy Clients
+   </h2>
+   <div class="quotes" style="margin-top:16px;">
+    <div class="quote">
+     “Incredibly fast and professional—our site loads in a blink and looks stunning.”
+     <div class="who">
+      — Alex, Startup Founder
+     </div>
+    </div>
+    <div class="quote">
+     “Clear communication, pixel‑perfect design, and smooth delivery. Highly recommend.”
+     <div class="who">
+      — Priya, Designer
+     </div>
+    </div>
+    <div class="quote">
+     “Sales up 32% after launch. Checkout and product pages are flawless.”
+     <div class="who">
+      — Marta, Shop Owner
+     </div>
+    </div>
+   </div>
+  </section>
+  <section class="container" id="pricing">
+   <h2 class="section-title">
+    Packages &amp; Pricing
+   </h2>
+   <div class="pricing" id="pricingContainer" style="margin-top:16px;">
+    <div class="price-card">
+     <div class="pill">
+      Basic
+     </div>
+     <div class="price">
+      $80
+     </div>
+     <ul class="ul">
+      <li>
+       1–3 pages
+      </li>
+      <li>
+       2 revisions
+      </li>
+      <li>
+       Hosting setup
+      </li>
+     </ul>
+    </div>
+    <div class="price-card">
+     <div class="pill">
+      Standard
+     </div>
+     <div class="price">
+      $250
+     </div>
+     <ul class="ul">
+      <li>
+       Up to 5 pages
+      </li>
+      <li>
+       Forms &amp; plugins
+      </li>
+      <li>
+       Speed optimization
+      </li>
+     </ul>
+    </div>
+    <div class="price-card">
+     <div class="pill">
+      Premium
+     </div>
+     <div class="price">
+      $500
+     </div>
+     <ul class="ul">
+      <li>
+       7–10 pages
+      </li>
+      <li>
+       Full e‑commerce
+      </li>
+      <li>
+       SEO &amp; integrations
+      </li>
+     </ul>
+    </div>
+   </div>
+  </section>
+  <section class="container" id="contact">
+   <h2 class="section-title">
+    Let’s Build Your Website
+   </h2>
+   <p class="muted">
+    Tell me about your project and I’ll reply with a tailored plan.
+   </p>
+   <form class="contact" id="contactForm">
+    <input class="input" placeholder="Your name" required=""/>
+    <input class="input" placeholder="Email" required="" type="email"/>
+    <textarea class="input" placeholder="Project details"></textarea>
+    <button class="btn" type="submit">
+     Get a Free Quote
+    </button>
+    <a class="btn ghost" href="#order" style="text-align:center;">
+     View Fiverr Gig
+    </a>
+   </form>
+  </section>
+  <footer>
+   <div class="container">
+    ©
+    <span id="y">
+    </span>
+    Web Dev by Bea • Portfolio mock for Fiverr gig gallery
+   </div>
+  </footer>
+  <script>
+   document.getElementById('y').textContent = new Date().getFullYear();
+    document.getElementById("contactForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = Object.fromEntries(new FormData(e.target).entries());
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      alert(data.message);
+    });
+
+    async function loadPricing() {
+      const res = await fetch("/api/pricing");
+      const plans = await res.json();
+      const container = document.getElementById("pricingContainer");
+      if (!container) return;
+      container.innerHTML = plans.map(plan => `
+        <div class="price-card">
+          <div class="pill">${plan.plan}</div>
+          <div class="price">$${plan.price}</div>
+          <ul class="ul">${plan.features.map(f => `<li>${f}</li>`).join("")}</ul>
+        </div>
+      `).join("");
+    }
+    loadPricing();
+  </script>
+  <script>
+   async function checkout(plan) {
+  try {
+    const res = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plan })
+    });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+    else alert("Payment setup failed.");
+  } catch (err) {
+    alert("Network error");
+  }
+}
+  </script>
+  <!-- Shopify Shop Section -->
+  <section id="shop" style="padding: 40px; text-align: center;">
+   <h2>
+    Shop
+   </h2>
+   <div id="product-component-12345">
+   </div>
+  </section>
+  <!-- Shopify Buy Button Script -->
+  <script type="text/javascript">
+   (function () {
+      var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+      if (window.ShopifyBuy) {
+        if (window.ShopifyBuy.UI) {
+          ShopifyBuyInit();
+        } else {
+          loadScript();
+        }
+      } else {
+        loadScript();
+      }
+      function loadScript() {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = scriptURL;
+        document.head.appendChild(script);
+        script.onload = ShopifyBuyInit;
+      }
+      function ShopifyBuyInit() {
+        var client = ShopifyBuy.buildClient({
+          domain: 'YOUR_SHOP_NAME.myshopify.com',
+          storefrontAccessToken: 'YOUR_STOREFRONT_ACCESS_TOKEN',
+        });
+        ShopifyBuy.UI.onReady(client).then(function (ui) {
+          ui.createComponent('product', {
+            id: 'PRODUCT_ID', // Replace with actual product ID
+            node: document.getElementById('product-component-12345'),
+            moneyFormat: '%24%7B%7Bamount%7D%7D',
+            options: {
+              product: {
+                styles: {
+                  product: {
+                    '@media (min-width: 601px)': {
+                      'max-width': '300px',
+                      'margin-left': 'auto',
+                      'margin-right': 'auto'
+                    }
+                  }
+                },
+                buttonDestination: 'checkout',
+              },
+              cart: {
+                startOpen: false,
+              }
+            },
+          });
+        });
+      }
+    })();
+  </script>
+ </body>
+</html>
